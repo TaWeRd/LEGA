@@ -122,15 +122,15 @@ const Index = () => {
                   <Slider
                     value={[porcentajeExtra]}
                     onValueChange={(value) => setPorcentajeExtra(value[0])}
-                    max={100}
+                    max={200}
                     min={0}
                     step={10}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
                     <span>0%</span>
-                    <span>50%</span>
                     <span>100%</span>
+                    <span>200%</span>
                   </div>
                 </div>
               </CardContent>
