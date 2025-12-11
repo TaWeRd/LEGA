@@ -1,10 +1,16 @@
+// === ResumenCotizacion.tsx ===
+// Cambios:
+// - Se agregan gramaje/apertura en WhatsApp, Copiar, Resumen y Tabla
+// - Se usa placeholder "—" cuando no hay valor seleccionado
+// - Se integran nuevos campos: gramTelaSeleccionado y aperturaSeleccionada
+
 import { useState } from 'react';
 import { Cliente, Cortina } from '@/types/cortina';
 import { Precios } from '@/data/precios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Share2, MessageCircle, FileText, Calendar, User, Phone, Mail, MapPin, Printer, X } from 'lucide-react';
+import { Share2, MessageCircle, FileText, Calendar, User, Phone, Mail, MapPin, Printer } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface ResumenCotizacionProps {
@@ -26,6 +32,9 @@ export const ResumenCotizacion = ({
 }: ResumenCotizacionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
+  // ===========================================
+  // TEXTO DETALLADO PARA WHATSAPP Y COPIAR
+  // ===========================================
   const generarTexto = () => {
     const { contacto } = precios;
     let texto = `📋 COTIZACIÓN ${contacto.nombreEmpresa}\n`;
@@ -39,16 +48,24 @@ export const ResumenCotizacion = ({
     cortinas.forEach((cortina, index) => {
       const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
       const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
-      
+
       texto += `🏠 CORTINA ${index + 1}\n`;
       texto += `• Medidas: ${cortina.ancho}cm × ${cortina.alto}cm\n`;
-      texto += `• Tela: ${tela?.nombre || '-'}\n`;
-      if (cortina.colorSeleccionado) texto += `• Color: ${cortina.colorSeleccionado}\n`;
-      texto += `• Sistema: ${sistema?.nombre || '-'}\n`;
+      texto += `• Tela: ${tela?.nombre || '—'}\n`;
+      texto += `• Gramaje: ${cortina.gramTelaSeleccionado || '—'}\n`;
+      texto += `• Apertura: ${cortina.aperturaSeleccionada || '—'}\n`;
+      texto += `• Color: ${cortina.colorSeleccionado || '—'}\n`;
+      texto += `• Sistema: ${sistema?.nombre || '—'}\n`;
       texto += `• Zócalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
       texto += `• Peso cadena: ${cortina.conPeso ? 'Sí' : 'No'}\n`;
-      if (cortina.ladoMando) texto += `• Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
-      if (cortina.caidaTela) texto += `• Caída: ${cortina.caidaTela === 'detras' ? 'Por detrás' : 'Por delante'}\n`;
+      texto += `• Caja: ${cortina.caja ? 'Sí' : 'No'}\n`;
+
+      if (cortina.ladoMando)
+        texto += `• Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
+
+      if (cortina.caidaTela)
+        texto += `• Caída: ${cortina.caidaTela === 'detras' ? 'Por detrás' : 'Por delante'}\n`;
+
       texto += `💰 Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
     });
 
@@ -62,24 +79,20 @@ export const ResumenCotizacion = ({
     return texto;
   };
 
+  // ===========================================
+  // WHATSAPP + COPIAR + IMPRIMIR
+  // ===========================================
   const compartirWhatsApp = () => {
-    const resultado = validar();
-    if (!resultado.valido) {
-      toast({ title: 'Error', description: resultado.mensaje, variant: 'destructive' });
-      return;
-    }
+    const r = validar();
+    if (!r.valido) return toast({ title: 'Error', description: r.mensaje, variant: 'destructive' });
 
-    const texto = encodeURIComponent(generarTexto());
-    window.open(`https://wa.me/?text=${texto}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(generarTexto())}`, '_blank');
     toast({ title: 'Éxito', description: 'Cotización lista para compartir' });
   };
 
   const copiarTexto = async () => {
-    const resultado = validar();
-    if (!resultado.valido) {
-      toast({ title: 'Error', description: resultado.mensaje, variant: 'destructive' });
-      return;
-    }
+    const r = validar();
+    if (!r.valido) return toast({ title: 'Error', description: r.mensaje, variant: 'destructive' });
 
     try {
       await navigator.clipboard.writeText(generarTexto());
@@ -90,18 +103,14 @@ export const ResumenCotizacion = ({
   };
 
   const abrirCotizacion = () => {
-    const resultado = validar();
-    if (!resultado.valido) {
-      toast({ title: 'Error', description: resultado.mensaje, variant: 'destructive' });
-      return;
-    }
+    const r = validar();
+    if (!r.valido) return toast({ title: 'Error', description: r.mensaje, variant: 'destructive' });
     setModalOpen(true);
   };
 
-  const imprimirCotizacion = () => {
-    window.print();
-  };
-
+  // ===========================================
+  // RENDER
+  // ===========================================
   return (
     <>
       <Card className="shadow-soft border-gold/20 overflow-hidden">
@@ -111,7 +120,9 @@ export const ResumenCotizacion = ({
             Resumen de Cotización
           </CardTitle>
         </CardHeader>
+
         <CardContent className="p-6 space-y-6">
+          
           {/* Cliente */}
           <div className="space-y-2">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Cliente</h4>
@@ -124,9 +135,10 @@ export const ResumenCotizacion = ({
             </div>
           </div>
 
-          {/* Cortinas */}
+          {/* Cortinas Resumen */}
           <div className="space-y-3">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Cortinas</h4>
+
             {cortinas.map((cortina, index) => {
               const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
               const subtotal = calcularTotal(cortina);
@@ -139,13 +151,20 @@ export const ResumenCotizacion = ({
                       ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
-                  {cortina.ancho && cortina.alto && (
-                    <p className="text-muted-foreground">{cortina.ancho}cm × {cortina.alto}cm</p>
-                  )}
-                  {tela && <p className="text-muted-foreground">{tela.nombre}</p>}
-                  {cortina.colorSeleccionado && (
-                    <p className="text-muted-foreground">Color: {cortina.colorSeleccionado}</p>
-                  )}
+
+                  {/* Mostrar datos incluyendo gramaje y apertura */}
+                  <p className="text-muted-foreground">{cortina.ancho}cm × {cortina.alto}cm</p>
+                  <p className="text-muted-foreground">{tela?.nombre || '—'}</p>
+                  <p className="text-muted-foreground">Gramaje: {cortina.gramTelaSeleccionado || '—'}</p>
+                  <p className="text-muted-foreground">Apertura: {cortina.aperturaSeleccionada || '—'}</p>
+                  <p className="text-muted-foreground">Sistema: {cortina.sistemaSeleccionado || '—'}</p>
+                  <p className="text-muted-foreground">Lado del mando: {cortina.ladoMando || '—'}</p>
+                  <p className="text-muted-foreground">Caida de tela: {cortina.caidaTela || '—'}</p>
+                  <p className="text-muted-foreground">Zócalo forrado: {cortina.zocaloForrado ? 'Sí' : 'No'}</p>
+                  <p className="text-muted-foreground">Peso cadena: {cortina.conPeso ? 'Sí' : 'No'}</p>
+                  <p className="text-muted-foreground">Caja: {cortina.caja ? 'Sí' : 'No'}</p>
+                  <p className="text-muted-foreground">Color: {cortina.colorSeleccionado || '—'}</p>
+
                 </div>
               );
             })}
@@ -163,158 +182,107 @@ export const ResumenCotizacion = ({
 
           {/* Acciones */}
           <div className="space-y-3">
-            <Button
-              onClick={abrirCotizacion}
-              className="w-full bg-gold hover:bg-gold/90 text-gold-foreground"
-            >
+            <Button onClick={abrirCotizacion} className="w-full bg-gold hover:bg-gold/90 text-gold-foreground">
               <FileText className="w-4 h-4 mr-2" />
               Generar Cotización Detallada
             </Button>
+
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button
-                onClick={compartirWhatsApp}
-                className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white"
-              >
+              <Button onClick={compartirWhatsApp} className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white">
                 <MessageCircle className="w-4 h-4 mr-2" />
                 WhatsApp
               </Button>
-              <Button
-                variant="outline"
-                onClick={copiarTexto}
-                className="flex-1"
-              >
+
+              <Button variant="outline" onClick={copiarTexto} className="flex-1">
                 <Share2 className="w-4 h-4 mr-2" />
                 Copiar
               </Button>
             </div>
           </div>
+
         </CardContent>
       </Card>
 
-      {/* Modal de Cotización Detallada */}
+      {/* Modal Cotización Detallada */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:overflow-visible">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="print:hidden">
             <DialogTitle className="flex items-center justify-between">
               <span>Cotización Detallada</span>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={imprimirCotizacion}>
-                  <Printer className="w-4 h-4 mr-1" /> Imprimir
-                </Button>
-              </div>
+              <Button size="sm" variant="outline" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-1" /> Imprimir
+              </Button>
             </DialogTitle>
           </DialogHeader>
 
-          {/* Contenido imprimible */}
-          <div className="print:p-8" id="cotizacion-print">
+          {/* Parte imprimible */}
+          <div className="print:p-8">
+            
             {/* Encabezado */}
             <div className="border-b-2 border-gold pb-4 mb-6">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-3xl font-display font-bold text-primary">
-                    {precios.contacto.nombreEmpresa}
-                  </h1>
-                  <p className="text-muted-foreground">Cortinas Roller Profesionales</p>
-                </div>
-                <div className="text-right text-sm text-muted-foreground">
-                  <p>📞 {precios.contacto.telefono}</p>
-                  <p>📧 {precios.contacto.email}</p>
-                </div>
-              </div>
+              <h1 className="text-3xl font-display font-bold text-primary">
+                {precios.contacto.nombreEmpresa}
+              </h1>
+              <p className="text-muted-foreground">Cortinas Roller Profesionales</p>
             </div>
 
-            {/* Título Cotización */}
-            <div className="bg-primary/10 rounded-lg p-4 mb-6 text-center">
-              <h2 className="text-2xl font-display font-bold text-primary">COTIZACIÓN</h2>
-              <p className="text-muted-foreground">Fecha: {new Date().toLocaleDateString('es-AR')}</p>
-            </div>
+            {/* Tabla Detalle */}
+            <h3 className="font-semibold text-lg mb-3">Detalle de Cortinas</h3>
 
-            {/* Datos del Cliente */}
-            <div className="mb-6 p-4 border border-border rounded-lg">
-              <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                <User className="w-5 h-5 text-gold" /> Datos del Cliente
-              </h3>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div><span className="font-medium">Nombre:</span> {cliente.nombre}</div>
-                <div><span className="font-medium">Teléfono:</span> {cliente.telefono}</div>
-                {cliente.email && <div><span className="font-medium">Email:</span> {cliente.email}</div>}
-                {cliente.direccion && <div className="col-span-2"><span className="font-medium">Dirección:</span> {cliente.direccion}</div>}
-              </div>
-            </div>
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="bg-secondary">
+                  <th className="border p-2 text-left">#</th>
+                  <th className="border p-2 text-left">Descripción</th>
+                  <th className="border p-2 text-left">Medidas</th>
+                  <th className="border p-2 text-right">Subtotal</th>
+                </tr>
+              </thead>
 
-            {/* Detalle de Cortinas */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-lg mb-3">Detalle de Cortinas</h3>
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="bg-secondary">
-                    <th className="border border-border p-2 text-left">#</th>
-                    <th className="border border-border p-2 text-left">Descripción</th>
-                    <th className="border border-border p-2 text-left">Medidas</th>
-                    <th className="border border-border p-2 text-right">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cortinas.map((cortina, index) => {
-                    const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
-                    const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
-                    const subtotal = calcularTotal(cortina);
+              <tbody>
+                {cortinas.map((cortina, index) => {
+                  const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
+                  const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
+                  const subtotal = calcularTotal(cortina);
 
-                    return (
-                      <tr key={cortina.id} className="hover:bg-muted/50">
-                        <td className="border border-border p-2 font-medium">{index + 1}</td>
-                        <td className="border border-border p-2">
-                          <div className="space-y-1">
-                            <p className="font-medium">{tela?.nombre || '-'}</p>
-                            {cortina.colorSeleccionado && <p className="text-muted-foreground">Color: {cortina.colorSeleccionado}</p>}
-                            <p className="text-muted-foreground">{sistema?.nombre || '-'}</p>
-                            <p className="text-muted-foreground text-xs">
-                              Zócalo: {cortina.zocaloForrado ? 'A la vista' : 'Forrado'} | 
-                              Peso: {cortina.conPeso ? 'Sí' : 'No'}
-                              {cortina.ladoMando && ` | Mando: ${cortina.ladoMando === 'derecho' ? 'Der.' : 'Izq.'}`}
-                              {cortina.caidaTela && ` | Caída: ${cortina.caidaTela === 'detras' ? 'Detrás' : 'Delante'}`}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="border border-border p-2 whitespace-nowrap">
-                          {cortina.ancho}cm × {cortina.alto}cm
-                        </td>
-                        <td className="border border-border p-2 text-right font-semibold">
-                          ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-                <tfoot>
-                  <tr className="bg-gold/20 font-bold">
-                    <td colSpan={3} className="border border-border p-3 text-right text-lg">
-                      TOTAL (sin IVA):
-                    </td>
-                    <td className="border border-border p-3 text-right text-xl text-gold">
-                      ${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+                  return (
+                    <tr key={index} className="hover:bg-muted/50">
+                      <td className="border p-2">{index + 1}</td>
 
-            {/* Notas */}
-            <div className="border-t border-border pt-4 text-sm text-muted-foreground">
-              <p className="mb-2"><strong>Notas:</strong></p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Precios expresados sin IVA</li>
-                <li>Cotización válida por 15 días</li>
-                <li>Medidas mínimas: 100cm × 100cm</li>
-                <li>Tiempo de entrega: consultar disponibilidad</li>
-              </ul>
-            </div>
+                      <td className="border p-2">
+                        <p className="font-medium">{tela?.nombre || '—'}</p>
+                        <p className="text-muted-foreground text-xs">
+                          Gramaje: {cortina.gramTelaSeleccionado || '—'} |
+                          Apertura: {cortina.aperturaSeleccionada || '—'} |
+                          Color: {cortina.colorSeleccionado || '—'}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          Sistema: {sistema?.nombre || '—'}
+                        </p>
+                      </td>
 
-            {/* Pie */}
-            <div className="mt-8 pt-4 border-t-2 border-gold text-center text-sm text-muted-foreground">
-              <p className="font-semibold text-primary">{precios.contacto.nombreEmpresa}</p>
-              <p>¡Gracias por confiar en nosotros!</p>
-            </div>
+                      <td className="border p-2">
+                        {cortina.ancho}cm × {cortina.alto}cm
+                      </td>
+
+                      <td className="border p-2 text-right font-semibold">
+                        ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+
+              <tfoot>
+                <tr className="bg-gold/20 font-bold">
+                  <td colSpan={3} className="border p-3 text-right">TOTAL (sin IVA):</td>
+                  <td className="border p-3 text-right text-gold text-xl">
+                    ${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+
           </div>
         </DialogContent>
       </Dialog>

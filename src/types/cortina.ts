@@ -6,6 +6,9 @@ export interface Cortina {
   sistemaSeleccionado: string;
   zocaloForrado: boolean;
   conPeso: boolean;
+  gramTelaSeleccionado: string;
+  aperturaSeleccionada: string;
+  caja: boolean;
   ladoMando: 'izquierdo' | 'derecho' | '';
   caidaTela: 'detras' | 'delante' | '';
   colorSeleccionado: string;
@@ -24,9 +27,12 @@ export const crearCortinaNueva = (id: number): Cortina => ({
   alto: '',
   telaSeleccionada: '',
   sistemaSeleccionado: '',
-  zocaloForrado: true,
+  zocaloForrado: false,
   conPeso: false,
+  gramTelaSeleccionado: '',
+  aperturaSeleccionada: '',
+  caja: false,
   ladoMando: '',
   caidaTela: '',
-  colorSeleccionado: ''
+  colorSeleccionado: '',
 });

@@ -2,6 +2,8 @@ export interface Tela {
   id: string;
   nombre: string;
   precio: number;
+  apertura?: string[];
+  gramTela?: string[];
   colores: string[];
 }
 
@@ -14,6 +16,7 @@ export interface Sistema {
 export interface Adicionales {
   zocaloForrado: number;
   pesoCadena: number;
+  caja:number;
 }
 
 export interface Contacto {
@@ -35,56 +38,82 @@ export const PRECIOS_LOCALES: Precios = {
   telas: [
     { 
       id: 'screen5_3005', 
-      nombre: 'SCREEN 5% 3005 (ancho máx 2.50m)', 
-      precio: 14950, 
+      nombre: 'SCREEN  ', 
+      precio: 14950,
+      apertura: ['5%'],
+      gramTela: ['420G'],
       colores: ['Blanco', 'Blanco/Beige', 'Beige', 'Blanco/Gris', 'Gris', 'Gris/Negro', 'Negro'] 
     },
     { 
       id: 'screen5_2005', 
-      nombre: 'SCREEN 5% 2005 (ancho máx 2.50m)', 
-      precio: 14105, 
+      nombre: 'SCREEN BASIC', 
+      precio: 14105,
+      apertura: ['5%'],
+      gramTela: ['385G'],
       colores: ['Blanco', 'Blanco/Beige', 'Blanco/Gris', 'Negro'] 
     },
     { 
       id: 'mesh10', 
-      nombre: 'MESH 10%', 
-      precio: 8000, 
+      nombre: 'MESH', 
+      precio: 8000,
+      apertura: ['10%'],
+      gramTela: ['350G'],
       colores: ['Blanco', 'Beige', 'Gris'] 
     },
     { 
       id: 'blackout_premium', 
-      nombre: 'BLACK OUT 550grs PREMIUM', 
-      precio: 14105, 
+      nombre: 'BLACK OUT PREMIUM', 
+      precio: 14105,
+      apertura: ['100% Opacidad'],
+      gramTela: ['520G'], 
       colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris Topo', 'Negro'] 
     },
     { 
       id: 'blackout_eco', 
-      nombre: 'BLACK OUT ECO FRIENDLY 440grs', 
+      nombre: 'BLACK OUT ECO FRIENDLY', 
       precio: 10400, 
+      apertura: ['100% Opacidad'],
+      gramTela: ['440G'],
       colores: ['Blanco', 'Natural', 'Gris'] 
     },
     { 
       id: 'blackout_economico', 
-      nombre: 'BLACK OUT ECONÓMICO 405grs', 
+      nombre: 'BLACK OUT ECONÓMICO', 
       precio: 8000, 
+      apertura: ['100% Opacidad'],
+      gramTela: ['405G'],
       colores: ['Blanco', 'Natural', 'Gris'] 
     },
     { 
+      id: 'screen5_99225', 
+      nombre: 'MALAGA', 
+      precio: 14105, 
+      apertura: ['Translucida'],
+      gramTela: ['320G'],
+      colores: ['Arena'] 
+    },
+    { 
       id: 'lagoa', 
-      nombre: 'Lagoa', 
+      nombre: 'LAGOA', 
       precio: 13000, 
+      apertura: ['Translucida'],
+      gramTela: ['320G'],
       colores: ['Blanco'] 
     },
     { 
       id: 'berlin', 
-      nombre: 'Berlin', 
+      nombre: 'BERLIN', 
       precio: 13000, 
+      apertura: ['Translucida'],
+      gramTela: ['320G'],
       colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris oscuro', 'Negro'] 
     },
     { 
       id: 'dali', 
-      nombre: 'Dali', 
+      nombre: 'DALI', 
       precio: 13000, 
+      apertura: ['Translucida'],
+      gramTela: ['320G'],
       colores: ['Blanco', 'Natural'] 
     }
   ],
@@ -94,11 +123,14 @@ export const PRECIOS_LOCALES: Precios = {
     { id: 'sistema32_negro_plastico', nombre: 'Sistema 32mm cadena plástica negra', precio: 14300 },
     { id: 'sistema38_blanco_plastico', nombre: 'Sistema 38mm cadena plástica blanca', precio: 17500 },
     { id: 'sistema38_metalica', nombre: 'Sistema 38mm cadena metálica', precio: 19000 },
-    { id: 'sistema38_negro_plastico', nombre: 'Sistema 38mm cadena plástica negra', precio: 17500 }
+    { id: 'sistema38_negro_plastico', nombre: 'Sistema 38mm cadena plástica negra', precio: 17500 },
+    { id: 'sistema50_blanco_plastico', nombre: 'Sistema 50mm cadena plástica blanca', precio: 31000 },
+    { id: 'sistema50_metalica', nombre: 'Sistema 50mm cadena metálica', precio: 35000 }
   ],
   adicionales: {
     zocaloForrado: 7000,
-    pesoCadena: 4000
+    pesoCadena: 4000,
+    caja: 4000
   },
   contacto: {
     telefono: '1123977924',
