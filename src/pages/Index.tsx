@@ -32,25 +32,30 @@ const Index = () => {
   const [mostrarSplash, setMostrarSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setMostrarSplash(false), 1500);
+    const timer = setTimeout(() => setMostrarSplash(false), 4800);
     return () => clearTimeout(timer);
   }, []);
 
   if (mostrarSplash) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background via-cream to-background">
-        <div className="text-center animate-fade-in space-y-4">
-          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary to-gold rounded-2xl flex items-center justify-center shadow-lg">
-            <Home className="w-12 h-12 text-primary-foreground" />
-          </div>
-          <h1 className="font-display text-4xl font-bold text-foreground tracking-tight">
-            {precios.contacto.nombreEmpresa}
-          </h1>
-          <p className="text-muted-foreground">Cotizador Profesional</p>
-          <div className="flex justify-center gap-1 pt-4">
-            <span className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-            <span className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-            <span className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+      <div className="min-h-screen relative flex items-center justify-center overflow-hidden bg-black">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/25 to-black/45" />
+        <img
+          src="/img/logoUpdate.png"
+          alt=""
+          className="absolute inset-0 m-auto h-[120vmin] w-[120vmin] opacity-60 blur-3xl saturate-150"
+        />
+        <div className="relative z-10 flex flex-col items-center justify-center gap-5 px-6">
+          <img
+            src="/img/logoUpdate.png"
+            alt="LEGA Cortinas"
+            className="w-[70vw] max-w-[420px] object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)] animate-splash-zoom"
+          />
+          <div className="text-center animate-fade-in space-y-2">
+            <h1 className="font-display text-4xl font-bold text-white tracking-tight">
+              {precios.contacto.nombreEmpresa}
+            </h1>
+            <p className="text-xs uppercase tracking-[0.35em] text-white/70">Cortinas Roller</p>
           </div>
         </div>
       </div>
@@ -64,9 +69,11 @@ const Index = () => {
         <div className="container max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-gold rounded-lg flex items-center justify-center">
-                <Home className="w-5 h-5 text-primary-foreground" />
-              </div>
+              <img
+                src="/img/logoUpdate.png"
+                alt="LEGA Cortinas"
+                className="w-12 h-12 object-contain"
+              />
               <div>
                 <h1 className="font-display text-lg font-semibold">{precios.contacto.nombreEmpresa}</h1>
                 <p className="text-xs text-muted-foreground">Cotizador de Cortinas Roller</p>
