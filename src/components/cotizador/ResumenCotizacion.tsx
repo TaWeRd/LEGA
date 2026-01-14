@@ -1,9 +1,3 @@
-// === ResumenCotizacion.tsx ===
-// Cambios:
-// - Se agregan gramaje/apertura en WhatsApp, Copiar, Resumen y Tabla
-// - Se usa placeholder "—" cuando no hay valor seleccionado
-// - Se integran nuevos campos: gramTelaSeleccionado y aperturaSeleccionada
-
 import { useState } from 'react';
 import { Cliente, Cortina } from '@/types/cortina';
 import { Precios } from '@/data/precios';
@@ -32,71 +26,61 @@ export const ResumenCotizacion = ({
 }: ResumenCotizacionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  // ===========================================
-  // TEXTO DETALLADO PARA WHATSAPP Y COPIAR
-  // ===========================================
   const generarTexto = () => {
     const { contacto } = precios;
-    let texto = `📋 COTIZACIÓN ${contacto.nombreEmpresa}\n`;
-    texto += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-    texto += `👤 Cliente: ${cliente.nombre}\n`;
-    texto += `📞 Teléfono: ${cliente.telefono}\n`;
-    if (cliente.email) texto += `📧 Email: ${cliente.email}\n`;
-    if (cliente.direccion) texto += `📍 Dirección: ${cliente.direccion}\n`;
-    texto += `📅 Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
+    let texto = `COTIZACION ${contacto.nombreEmpresa}\n`;
+    texto += `------------------------------\n\n`;
+    texto += `Cliente: ${cliente.nombre}\n`;
+    if (cliente.telefono) texto += `Telefono: ${cliente.telefono}\n`;
+    if (cliente.email) texto += `Email: ${cliente.email}\n`;
+    if (cliente.direccion) texto += `Direccion: ${cliente.direccion}\n`;
+    texto += `Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
 
     cortinas.forEach((cortina, index) => {
       const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
       const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
 
-      texto += `🏠 CORTINA ${index + 1}\n`;
-      texto += `• Medidas: ${cortina.ancho}cm × ${cortina.alto}cm\n`;
-      texto += `• Tela: ${tela?.nombre || '—'}\n`;
-      texto += `• Gramaje: ${cortina.gramTelaSeleccionado || '—'}\n`;
-      texto += `• Apertura: ${cortina.aperturaSeleccionada || '—'}\n`;
-      texto += `• Color: ${cortina.colorSeleccionado || '—'}\n`;
-      texto += `• Sistema: ${sistema?.nombre || '—'}\n`;
-      texto += `• Zócalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
-      texto += `• Peso cadena: ${cortina.conPeso ? 'Sí' : 'No'}\n`;
-      texto += `• Caja: ${cortina.caja ? 'Sí' : 'No'}\n`;
-
-      if (cortina.ladoMando)
-        texto += `• Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
-
-      if (cortina.caidaTela)
-        texto += `• Caída: ${cortina.caidaTela === 'detras' ? 'Por detrás' : 'Por delante'}\n`;
-
-      texto += `💰 Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
+      texto += `CORTINA ${index + 1}\n`;
+      texto += `Medidas: ${cortina.ancho}cm x ${cortina.alto}cm\n`;
+      texto += `Tela: ${tela?.nombre || '-'}\n`;
+      texto += `Gramaje: ${cortina.gramTelaSeleccionado || '-'}\n`;
+      texto += `Apertura: ${cortina.aperturaSeleccionada || '-'}\n`;
+      texto += `Color: ${cortina.colorSeleccionado || '-'}\n`;
+      texto += `Sistema: ${sistema?.nombre || '-'}\n`;
+      texto += `Zocalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
+      texto += `Peso cadena: ${cortina.conPeso ? 'Si' : 'No'}\n`;
+      texto += `Caja: ${cortina.caja ? 'Si' : 'No'}\n`;
+      if (cortina.ladoMando) {
+        texto += `Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
+      }
+      if (cortina.caidaTela) {
+        texto += `Caida: ${cortina.caidaTela === 'detras' ? 'Por detras' : 'Por delante'}\n`;
+      }
+      texto += `Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
     });
 
-    texto += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    texto += `💵 TOTAL: $${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n`;
-    texto += `⚡ Precio sin IVA\n\n`;
-    texto += `📞 ${contacto.telefono}\n`;
-    texto += `📧 ${contacto.email}\n`;
-    texto += `${contacto.nombreEmpresa} ✨`;
+    texto += `------------------------------\n`;
+    texto += `TOTAL: $${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
+    texto += `${contacto.telefono}\n`;
+    texto += `${contacto.email}\n`;
+    texto += `${contacto.nombreEmpresa}\n`;
 
     return texto;
   };
 
-  // ===========================================
-  // WHATSAPP + COPIAR + IMPRIMIR
-  // ===========================================
   const compartirWhatsApp = () => {
     const r = validar();
     if (!r.valido) return toast({ title: 'Error', description: r.mensaje, variant: 'destructive' });
-
     window.open(`https://wa.me/?text=${encodeURIComponent(generarTexto())}`, '_blank');
-    toast({ title: 'Éxito', description: 'Cotización lista para compartir' });
+    toast({ title: 'Exito', description: 'Cotizacion lista para compartir' });
   };
 
   const copiarTexto = async () => {
     const r = validar();
     if (!r.valido) return toast({ title: 'Error', description: r.mensaje, variant: 'destructive' });
-
     try {
       await navigator.clipboard.writeText(generarTexto());
-      toast({ title: 'Copiado', description: 'Cotización copiada al portapapeles' });
+      toast({ title: 'Copiado', description: 'Cotizacion copiada al portapapeles' });
     } catch {
       toast({ title: 'Error', description: 'No se pudo copiar', variant: 'destructive' });
     }
@@ -108,37 +92,30 @@ export const ResumenCotizacion = ({
     setModalOpen(true);
   };
 
-  // ===========================================
-  // RENDER
-  // ===========================================
   return (
     <>
       <Card className="shadow-soft border-gold/20 overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
           <CardTitle className="font-display text-xl flex items-center gap-2">
             <FileText className="w-5 h-5" />
-            Resumen de Cotización
+            Resumen de Cotizacion
           </CardTitle>
         </CardHeader>
 
         <CardContent className="p-6 space-y-6">
-          
-          {/* Cliente */}
           <div className="space-y-2">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Cliente</h4>
             <div className="space-y-1 text-sm">
-              <p className="flex items-center gap-2"><User className="w-4 h-4 text-gold" /> {cliente.nombre || '—'}</p>
-              <p className="flex items-center gap-2"><Phone className="w-4 h-4 text-gold" /> {cliente.telefono || '—'}</p>
+              <p className="flex items-center gap-2"><User className="w-4 h-4 text-gold" /> {cliente.nombre || '-'}</p>
+              {cliente.telefono && <p className="flex items-center gap-2"><Phone className="w-4 h-4 text-gold" /> {cliente.telefono}</p>}
               {cliente.email && <p className="flex items-center gap-2"><Mail className="w-4 h-4 text-gold" /> {cliente.email}</p>}
               {cliente.direccion && <p className="flex items-center gap-2"><MapPin className="w-4 h-4 text-gold" /> {cliente.direccion}</p>}
               <p className="flex items-center gap-2"><Calendar className="w-4 h-4 text-gold" /> {new Date().toLocaleDateString('es-AR')}</p>
             </div>
           </div>
 
-          {/* Cortinas Resumen */}
           <div className="space-y-3">
             <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Cortinas</h4>
-
             {cortinas.map((cortina, index) => {
               const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
               const subtotal = calcularTotal(cortina);
@@ -151,27 +128,22 @@ export const ResumenCotizacion = ({
                       ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
-
-                  {/* Mostrar datos incluyendo gramaje y apertura */}
-                  <p className="text-muted-foreground">{cortina.ancho}cm × {cortina.alto}cm</p>
-                  <p className="text-muted-foreground">{tela?.nombre || '—'}</p>
-                  <p className="text-muted-foreground">Gramaje: {cortina.gramTelaSeleccionado || '—'}</p>
-                  <p className="text-muted-foreground">Apertura: {cortina.aperturaSeleccionada || '—'}</p>
-                  <p className="text-muted-foreground">Color: {cortina.colorSeleccionado || '—'}</p>
-                  <p className="text-muted-foreground">Sistema: {cortina.sistemaSeleccionado || '—'}</p>
-                  <p className="text-muted-foreground">Lado del mando: {cortina.ladoMando || '—'}</p>
-                  <p className="text-muted-foreground">Caida de tela: {cortina.caidaTela || '—'}</p>
-                  <p className="text-muted-foreground">Zócalo forrado: {cortina.zocaloForrado ? 'Sí' : 'No'}</p>
-                  <p className="text-muted-foreground">Peso cadena: {cortina.conPeso ? 'Sí' : 'No'}</p>
-                  <p className="text-muted-foreground">Caja: {cortina.caja ? 'Sí' : 'No'}</p>
-                  
-
+                  <p className="text-muted-foreground">{cortina.ancho}cm x {cortina.alto}cm</p>
+                  <p className="text-muted-foreground">{tela?.nombre || '-'}</p>
+                  <p className="text-muted-foreground">Gramaje: {cortina.gramTelaSeleccionado || '-'}</p>
+                  <p className="text-muted-foreground">Apertura: {cortina.aperturaSeleccionada || '-'}</p>
+                  <p className="text-muted-foreground">Color: {cortina.colorSeleccionado || '-'}</p>
+                  <p className="text-muted-foreground">Sistema: {cortina.sistemaSeleccionado || '-'}</p>
+                  <p className="text-muted-foreground">Lado del mando: {cortina.ladoMando || '-'}</p>
+                  <p className="text-muted-foreground">Caida de tela: {cortina.caidaTela || '-'}</p>
+                  <p className="text-muted-foreground">Zocalo forrado: {cortina.zocaloForrado ? 'Si' : 'No'}</p>
+                  <p className="text-muted-foreground">Peso cadena: {cortina.conPeso ? 'Si' : 'No'}</p>
+                  <p className="text-muted-foreground">Caja: {cortina.caja ? 'Si' : 'No'}</p>
                 </div>
               );
             })}
           </div>
 
-          {/* Total */}
           <div className="p-4 rounded-lg bg-gradient-to-r from-gold/20 to-primary/20 border border-gold/30">
             <div className="flex justify-between items-center">
               <span className="font-medium">Total (sin IVA)</span>
@@ -181,11 +153,10 @@ export const ResumenCotizacion = ({
             </div>
           </div>
 
-          {/* Acciones */}
           <div className="space-y-3">
             <Button onClick={abrirCotizacion} className="w-full bg-gold hover:bg-gold/90 text-gold-foreground">
               <FileText className="w-4 h-4 mr-2" />
-              Generar Cotización Detallada
+              Generar Cotizacion Detallada
             </Button>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -193,97 +164,107 @@ export const ResumenCotizacion = ({
                 <MessageCircle className="w-4 h-4 mr-2" />
                 WhatsApp
               </Button>
-
               <Button variant="outline" onClick={copiarTexto} className="flex-1">
                 <Share2 className="w-4 h-4 mr-2" />
                 Copiar
               </Button>
             </div>
           </div>
-
         </CardContent>
       </Card>
 
-      {/* Modal Cotización Detallada */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[980px] max-w-[95vw] max-h-[90vh] overflow-y-auto print:relative print:left-0 print:top-0 print:transform-none print:max-w-none print:w-full print:h-auto print:overflow-visible print:border-none print:shadow-none print:rounded-none">
           <DialogHeader className="print:hidden">
             <DialogTitle className="flex items-center justify-between">
-              <span>Cotización Detallada</span>
+              <span>Cotizacion Detallada</span>
               <Button size="sm" variant="outline" onClick={() => window.print()}>
                 <Printer className="w-4 h-4 mr-1" /> Imprimir
               </Button>
             </DialogTitle>
           </DialogHeader>
 
-          {/* Parte imprimible */}
-          <div className="print:p-8">
-            
-            {/* Encabezado */}
-            <div className="border-b-2 border-gold pb-4 mb-6">
-              <h1 className="text-3xl font-display font-bold text-primary">
-                {precios.contacto.nombreEmpresa}
-              </h1>
-              <p className="text-muted-foreground">Cortinas Roller Profesionales</p>
+          <div className="print-area print:p-8 print:w-full print:max-w-none">
+            <div className="flex items-center justify-between bg-secondary px-6 py-4 rounded-lg mb-4 print:w-full print:max-w-none">
+              <div>
+                <p className="font-display text-lg font-semibold">{precios.contacto.nombreEmpresa}</p>
+                <p className="text-xs text-muted-foreground">Cortinas Roller Profesionales</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Presupuesto</p>
+                <p className="text-sm font-semibold">Fecha: {new Date().toLocaleDateString('es-AR')}</p>
+              </div>
             </div>
 
-            {/* Tabla Detalle */}
-            <h3 className="font-semibold text-lg mb-3">Detalle de Cortinas</h3>
+            <div className="border border-border rounded-lg overflow-hidden mb-6 print:w-full print:max-w-none">
+              <div className="px-6 py-4 text-sm">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground uppercase text-xs tracking-wide">Cliente</p>
+                    <div className="flex flex-wrap justify-between gap-2">
+                      <p><span className="font-medium">Nombre:</span> {cliente.nombre || '-'}</p>
+                      <p><span className="font-medium">Direccion:</span> {cliente.direccion || '-'}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground uppercase text-xs tracking-wide">Contacto</p>
+                    <div className="flex flex-wrap justify-between gap-2">
+                      <p><span className="font-medium">Telefono:</span> {cliente.telefono || '-'}</p>
+                      <p><span className="font-medium">Email:</span> {cliente.email || '-'}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="bg-secondary">
-                  <th className="border p-2 text-left">#</th>
-                  <th className="border p-2 text-left">Descripción</th>
-                  <th className="border p-2 text-left">Medidas</th>
-                  <th className="border p-2 text-right">Subtotal</th>
+                  <th className="border border-border p-2 text-left">Descripcion</th>
+                  <th className="border border-border p-2 text-center">Cantidad</th>
+                  <th className="border border-border p-2 text-right">Precio Unit.</th>
+                  <th className="border border-border p-2 text-right">Precio Total</th>
                 </tr>
               </thead>
-
               <tbody>
                 {cortinas.map((cortina, index) => {
                   const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
                   const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
                   const subtotal = calcularTotal(cortina);
+                  const medidas = `${cortina.ancho}cm x ${cortina.alto}cm`;
 
                   return (
-                    <tr key={index} className="hover:bg-muted/50">
-                      <td className="border p-2">{index + 1}</td>
-
-                      <td className="border p-2">
-                        <p className="font-medium">{tela?.nombre || '—'}</p>
+                    <tr key={cortina.id} className="hover:bg-muted/50">
+                      <td className="border border-border p-2">
+                        <p className="font-medium">{index + 1}. {tela?.nombre || '-'}</p>
+                        <p className="text-muted-foreground text-xs">{medidas}</p>
                         <p className="text-muted-foreground text-xs">
-                          Gramaje: {cortina.gramTelaSeleccionado || '—'} |
-                          Apertura: {cortina.aperturaSeleccionada || '—'} |
-                          Color: {cortina.colorSeleccionado || '—'}
+                          Gramaje: {cortina.gramTelaSeleccionado || '-'} | Apertura: {cortina.aperturaSeleccionada || '-'}
                         </p>
                         <p className="text-muted-foreground text-xs">
-                          Sistema: {sistema?.nombre || '—'}
+                          Color: {cortina.colorSeleccionado || '-'} | Sistema: {sistema?.nombre || '-'}
                         </p>
                       </td>
-
-                      <td className="border p-2">
-                        {cortina.ancho}cm × {cortina.alto}cm
+                      <td className="border border-border p-2 text-center">1</td>
+                      <td className="border border-border p-2 text-right">
+                        ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                       </td>
-
-                      <td className="border p-2 text-right font-semibold">
+                      <td className="border border-border p-2 text-right font-semibold">
                         ${subtotal.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
                   );
                 })}
               </tbody>
-
               <tfoot>
                 <tr className="bg-gold/20 font-bold">
-                  <td colSpan={3} className="border p-3 text-right">TOTAL (sin IVA):</td>
-                  <td className="border p-3 text-right text-gold text-xl">
+                  <td colSpan={3} className="border border-border p-3 text-right">TOTAL:</td>
+                  <td className="border border-border p-3 text-right text-gold text-xl">
                     ${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                   </td>
                 </tr>
               </tfoot>
             </table>
-
           </div>
         </DialogContent>
       </Dialog>
