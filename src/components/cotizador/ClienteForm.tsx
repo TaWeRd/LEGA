@@ -33,12 +33,12 @@ export const ClienteForm = ({ cliente, onChange }: ClienteFormProps) => {
         <div className="space-y-2">
           <Label htmlFor="telefono" className="flex items-center gap-2 text-sm font-medium">
             <Phone className="w-4 h-4 text-gold" />
-            Teléfono *
+            Telefono
           </Label>
           <Input
             id="telefono"
             type="tel"
-            placeholder="Número de teléfono"
+            placeholder="Numero de telefono"
             value={cliente.telefono}
             onChange={(e) => handleChange('telefono', e.target.value)}
             className="bg-card border-border focus:border-gold focus:ring-gold/20"
@@ -63,11 +63,11 @@ export const ClienteForm = ({ cliente, onChange }: ClienteFormProps) => {
         <div className="space-y-2">
           <Label htmlFor="direccion" className="flex items-center gap-2 text-sm font-medium">
             <MapPin className="w-4 h-4 text-gold" />
-            Dirección
+            Direccion
           </Label>
           <Input
             id="direccion"
-            placeholder="Dirección de instalación"
+            placeholder="Direccion de instalacion"
             value={cliente.direccion}
             onChange={(e) => handleChange('direccion', e.target.value)}
             className="bg-card border-border focus:border-gold focus:ring-gold/20"

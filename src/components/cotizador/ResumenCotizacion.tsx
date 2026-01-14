@@ -157,13 +157,14 @@ export const ResumenCotizacion = ({
                   <p className="text-muted-foreground">{tela?.nombre || '—'}</p>
                   <p className="text-muted-foreground">Gramaje: {cortina.gramTelaSeleccionado || '—'}</p>
                   <p className="text-muted-foreground">Apertura: {cortina.aperturaSeleccionada || '—'}</p>
+                  <p className="text-muted-foreground">Color: {cortina.colorSeleccionado || '—'}</p>
                   <p className="text-muted-foreground">Sistema: {cortina.sistemaSeleccionado || '—'}</p>
                   <p className="text-muted-foreground">Lado del mando: {cortina.ladoMando || '—'}</p>
                   <p className="text-muted-foreground">Caida de tela: {cortina.caidaTela || '—'}</p>
                   <p className="text-muted-foreground">Zócalo forrado: {cortina.zocaloForrado ? 'Sí' : 'No'}</p>
                   <p className="text-muted-foreground">Peso cadena: {cortina.conPeso ? 'Sí' : 'No'}</p>
                   <p className="text-muted-foreground">Caja: {cortina.caja ? 'Sí' : 'No'}</p>
-                  <p className="text-muted-foreground">Color: {cortina.colorSeleccionado || '—'}</p>
+                  
 
                 </div>
               );
@@ -174,7 +175,7 @@ export const ResumenCotizacion = ({
           <div className="p-4 rounded-lg bg-gradient-to-r from-gold/20 to-primary/20 border border-gold/30">
             <div className="flex justify-between items-center">
               <span className="font-medium">Total (sin IVA)</span>
-              <span className="text-3xl font-display font-bold text-gold">
+              <span className="text-3xl font-body font-bold text-gold">
                 ${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               </span>
             </div>

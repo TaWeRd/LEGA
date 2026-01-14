@@ -30,7 +30,6 @@ export const useCotizador = (precios: Precios) => {
     setCortinas(prev => {
       const nuevas = [...prev];
       nuevas[index] = { ...nuevas[index], [campo]: valor };
-      // Reset color when fabric changes
       if (campo === 'telaSeleccionada') {
         nuevas[index].colorSeleccionado = '';
       }
@@ -69,20 +68,36 @@ export const useCotizador = (precios: Precios) => {
   }, [cortinas, calcularTotalCortina]);
 
   const validarCotizacion = useCallback((): { valido: boolean; mensaje?: string } => {
+    const minMedida = 100;
+    const maxAncho = 300;
+    const maxAlto = 450;
+
     if (!cliente.nombre.trim()) {
       return { valido: false, mensaje: 'Por favor ingresa el nombre del cliente' };
     }
-    if (!cliente.telefono.trim()) {
-      return { valido: false, mensaje: 'Por favor ingresa el teléfono del cliente' };
-    }
-    
+
     for (let i = 0; i < cortinas.length; i++) {
       const c = cortinas[i];
       if (!c.ancho || !c.alto || !c.telaSeleccionada || !c.sistemaSeleccionado) {
         return { valido: false, mensaje: `Completa todos los datos de la cortina ${i + 1}` };
       }
+
+      const ancho = Number(c.ancho);
+      const alto = Number(c.alto);
+      if (!Number.isFinite(ancho) || !Number.isFinite(alto)) {
+        return { valido: false, mensaje: `Medidas invalidas en la cortina ${i + 1}` };
+      }
+      if (ancho < minMedida || alto < minMedida) {
+        return { valido: false, mensaje: `Las medidas minimas son ${minMedida}cm en la cortina ${i + 1}` };
+      }
+      if (ancho > maxAncho) {
+        return { valido: false, mensaje: `El ancho maximo es ${maxAncho}cm en la cortina ${i + 1}` };
+      }
+      if (alto > maxAlto) {
+        return { valido: false, mensaje: `El alto maximo es ${maxAlto}cm en la cortina ${i + 1}` };
+      }
     }
-    
+
     return { valido: true };
   }, [cliente, cortinas]);
 

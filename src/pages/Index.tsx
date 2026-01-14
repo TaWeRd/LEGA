@@ -100,7 +100,7 @@ const Index = () => {
             {/* Cliente */}
             <Card className="shadow-soft">
               <CardHeader>
-                <CardTitle className="font-display text-xl flex items-center gap-2">
+                <CardTitle className="font-display text-2xl flex items-center gap-2">
                   <User className="w-5 h-5 text-gold" />
                   Datos del Cliente
                 </CardTitle>
@@ -114,7 +114,7 @@ const Index = () => {
             {/* Porcentaje Extra */}
             <Card className="shadow-soft">
               <CardHeader className="pb-3">
-                <CardTitle className="font-display text-xl flex items-center gap-2">
+                <CardTitle className="font-display text-2xl flex items-center gap-2">
                   <Percent className="w-5 h-5 text-gold" />
                   Porcentaje Extra
                 </CardTitle>
@@ -146,7 +146,7 @@ const Index = () => {
             {/* Cortinas */}
             <Card className="shadow-soft">
               <CardHeader>
-                <CardTitle className="font-display text-xl flex items-center gap-2">
+                <CardTitle className="font-display text-2xl flex items-center gap-2">
                   <Home className="w-5 h-5 text-gold" />
                   Cortinas
                 </CardTitle>
