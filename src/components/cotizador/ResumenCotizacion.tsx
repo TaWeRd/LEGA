@@ -25,6 +25,23 @@ export const ResumenCotizacion = ({
   validar
 }: ResumenCotizacionProps) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const totalCampos = 2 + cortinas.length * 7;
+  const completados =
+    (cliente.nombre.trim() ? 1 : 0) +
+    (cliente.direccion.trim() ? 1 : 0) +
+    cortinas.reduce((acc, c) => {
+      let count = 0;
+      if (c.ancho) count += 1;
+      if (c.alto) count += 1;
+      if (c.telaSeleccionada) count += 1;
+      if (c.sistemaSeleccionado) count += 1;
+      if (c.colorSeleccionado) count += 1;
+      if (c.ladoMando) count += 1;
+      if (c.caidaTela) count += 1;
+      return acc + count;
+    }, 0);
+  const avance = totalCampos > 0 ? Math.round((completados / totalCampos) * 100) : 0;
+  const cotizacionCompleta = avance === 100;
 
   const generarTexto = () => {
     const { contacto } = precios;
@@ -154,20 +171,38 @@ export const ResumenCotizacion = ({
           </div>
 
           <div className="space-y-3">
-            <Button onClick={abrirCotizacion} className="w-full bg-gold hover:bg-gold/90 text-gold-foreground">
+            <Button
+              onClick={abrirCotizacion}
+              className="w-full bg-gold hover:bg-gold/90 text-gold-foreground"
+              disabled={!cotizacionCompleta}
+            >
               <FileText className="w-4 h-4 mr-2" />
               Generar Cotizacion Detallada
             </Button>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button onClick={compartirWhatsApp} className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white">
+              <Button
+                onClick={compartirWhatsApp}
+                className="flex-1 bg-[#25D366] hover:bg-[#20bd5a] text-white"
+                disabled={!cotizacionCompleta}
+              >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 WhatsApp
               </Button>
-              <Button variant="outline" onClick={copiarTexto} className="flex-1">
+              <Button variant="outline" onClick={copiarTexto} className="flex-1" disabled={!cotizacionCompleta}>
                 <Share2 className="w-4 h-4 mr-2" />
                 Copiar
               </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Avance de cotizacion</span>
+              <span>{avance}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-secondary/60 overflow-hidden">
+              <div className="h-full bg-gold transition-all" style={{ width: `${avance}%` }} />
             </div>
           </div>
         </CardContent>

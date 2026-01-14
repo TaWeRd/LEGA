@@ -75,6 +75,9 @@ export const useCotizador = (precios: Precios) => {
     if (!cliente.nombre.trim()) {
       return { valido: false, mensaje: 'Por favor ingresa el nombre del cliente' };
     }
+    if (!cliente.direccion.trim()) {
+      return { valido: false, mensaje: 'Por favor ingresa la direccion del cliente' };
+    }
 
     for (let i = 0; i < cortinas.length; i++) {
       const c = cortinas[i];
@@ -95,6 +98,18 @@ export const useCotizador = (precios: Precios) => {
       }
       if (alto > maxAlto) {
         return { valido: false, mensaje: `El alto maximo es ${maxAlto}cm en la cortina ${i + 1}` };
+      }
+      if (!c.colorSeleccionado) {
+        return { valido: false, mensaje: `Selecciona el color en la cortina ${i + 1}` };
+      }
+      if (!c.ladoMando) {
+        return { valido: false, mensaje: `Selecciona el lado del mando en la cortina ${i + 1}` };
+      }
+      if (!c.caidaTela) {
+        return { valido: false, mensaje: `Selecciona la caida de tela en la cortina ${i + 1}` };
+      }
+      if (c.telaSeleccionada && (!c.gramTelaSeleccionado || !c.aperturaSeleccionada)) {
+        return { valido: false, mensaje: `Falta gramaje o apertura en la cortina ${i + 1}` };
       }
     }
 

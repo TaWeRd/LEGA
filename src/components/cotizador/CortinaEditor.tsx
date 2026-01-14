@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Ruler, Palette, Settings, Blinds, Grid2x2, SlidersHorizontal } from 'lucide-react';
+import { Ruler, Palette, Settings, Blinds, Grid2x2, SlidersHorizontal, Droplet } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface CortinaEditorProps {
@@ -144,53 +144,22 @@ export const CortinaEditor = ({
         </Select>
 
         {/* Info */}
-        <div className="flex gap-6">
-          {telaSeleccionada && telaSeleccionada.gramTela?.length > 0 && (
-            <div className="space-y-3 w-1/2">
-              <Label>Gramaje</Label>
-              <div className="flex flex-wrap gap-2">
-                {telaSeleccionada.gramTela.map((gram) => (
-                  <button
-                    key={gram}
-                    className={`px-3 py-1.5 rounded-full text-sm transition-all ${
-                      gramajeActual === gram
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
-                    }`}
-                  >
-                    {gram}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {telaSeleccionada && telaSeleccionada.apertura?.length > 0 && (
-            <div className="space-y-3 w-1/2">
-              <Label>Apertura</Label>
-              <div className="flex flex-wrap gap-2">
-                {telaSeleccionada.apertura.map((apertura) => (
-                  <button
-                    key={apertura}
-                    className={`px-3 py-1.5 rounded-full text-sm transition-all ${
-                      aperturaActual === apertura
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
-                    }`}
-                  >
-                    {apertura}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        {telaSeleccionada && (
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">Tela:</span> {telaSeleccionada.nombre || '-'} -{' '}
+            <span className="font-medium text-foreground">Gramaje:</span> {gramajeActual || '-'} -{' '}
+            <span className="font-medium text-foreground">Apertura:</span> {aperturaActual || '-'}
+          </p>
+        )}
 
         {/* Colores */}
         {telaSeleccionada && telaSeleccionada.colores.length > 0 && (
           <div className="space-y-3">
-            <Label>Color</Label>
-            <div className="flex flex-wrap gap-2">
+            <Label className="flex items-center gap-2">
+              <Droplet className="w-5 h-5 text-gold" />
+              Color
+            </Label>
+            <div className="flex flex-wrap gap-3">
               {telaSeleccionada.colores.map((color) => (
                 <button
                   key={color}
@@ -227,7 +196,6 @@ export const CortinaEditor = ({
               <SelectItem key={sistema.id} value={sistema.id}>
                 <span className="flex justify-between gap-4">
                   <span>{sistema.nombre}</span>
-                  <span className="text-gold font-medium">${sistema.precio.toLocaleString()}/m</span>
                 </span>
               </SelectItem>
             ))}
@@ -241,7 +209,7 @@ export const CortinaEditor = ({
           <Blinds className="w-5 h-5 text-gold" />
           Lado del mando
         </h4>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {['izquierdo', 'derecho'].map((lado) => (
             <button
               key={lado}
@@ -264,7 +232,7 @@ export const CortinaEditor = ({
           <Grid2x2 className="w-5 h-5 text-gold" />
           Caida de la tela
         </h4>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {[
             { id: 'detras', label: 'Por detras' },
             { id: 'delante', label: 'Por delante' }
@@ -293,7 +261,6 @@ export const CortinaEditor = ({
         <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
           <div>
             <p className="font-medium">Zocalo a la vista</p>
-            <p className="text-sm text-muted-foreground">+${precios.adicionales.zocaloForrado.toLocaleString()}/m</p>
           </div>
           <Switch
             checked={cortina.zocaloForrado}
@@ -304,7 +271,6 @@ export const CortinaEditor = ({
         <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
           <div>
             <p className="font-medium">Peso de cadena</p>
-            <p className="text-sm text-muted-foreground">+${precios.adicionales.pesoCadena.toLocaleString()}</p>
           </div>
           <Switch
             checked={cortina.conPeso}
@@ -315,7 +281,6 @@ export const CortinaEditor = ({
         <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
           <div>
             <p className="font-medium">Caja</p>
-            <p className="text-sm text-muted-foreground">+${precios.adicionales.caja.toLocaleString()}/m</p>
           </div>
           <Switch
             checked={cortina.caja}
