@@ -211,6 +211,11 @@ export const ResumenCotizacion = ({
             <div className="border-b-2 border-gold pb-4 mb-6">
               <div className="flex justify-between items-start">
                 <div>
+                  <img
+                    src="/img/logoUpdate.png"
+                    alt="LEGA Cortinas"
+                    className="h-12 w-12 object-contain mb-2"
+                  />
                   <h1 className="text-3xl font-display font-bold text-primary">
                     {precios.contacto.nombreEmpresa}
                   </h1>
