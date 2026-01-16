@@ -10,6 +10,12 @@ import { RefreshCw, User, Home, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import HeroSection from '@/components/hero/HeroSection';
+import MetricsSection from '@/components/hero/MetricsSection';
+import ProductsShowcase from '@/components/hero/ProductsShowcase';
+import FeaturesSection from '@/components/hero/FeaturesSection';
+import CTASection from '@/components/hero/CTASection';
+import Footer from '@/components/hero/Footer';
 
 const Index = () => {
   const { precios, cargando, recargar } = usePrecios();
@@ -30,6 +36,7 @@ const Index = () => {
   } = useCotizador(precios);
 
   const [mostrarSplash, setMostrarSplash] = useState(true);
+  const [seccionActiva, setSeccionActiva] = useState<'home' | 'roller' | 'verticales' | 'toldos'>('home');
 
   useEffect(() => {
     const timer = setTimeout(() => setMostrarSplash(false), 4800);
@@ -79,121 +86,186 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">Cotizador de Cortinas Roller</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={recargar}
-              disabled={cargando}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <RefreshCw className={`w-4 h-4 mr-1 ${cargando ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">Actualizar precios</span>
-            </Button>
+            <div className="flex items-center gap-3">
+              <nav className="flex items-center gap-2">
+                <button
+                  onClick={() => setSeccionActiva('home')}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                    seccionActiva === 'home'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary/60 text-secondary-foreground hover:bg-secondary'
+                  }`}
+                >
+                  Home
+                </button>
+                <button
+                  onClick={() => setSeccionActiva('roller')}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                    seccionActiva === 'roller'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary/60 text-secondary-foreground hover:bg-secondary'
+                  }`}
+                >
+                  Cortinas roller
+                </button>
+                <button
+                  onClick={() => setSeccionActiva('verticales')}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                    seccionActiva === 'verticales'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary/60 text-secondary-foreground hover:bg-secondary'
+                  }`}
+                >
+                  Verticales
+                </button>
+                <button
+                  onClick={() => setSeccionActiva('toldos')}
+                  className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                    seccionActiva === 'toldos'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary/60 text-secondary-foreground hover:bg-secondary'
+                  }`}
+                >
+                  Toldos
+                </button>
+              </nav>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={recargar}
+                disabled={cargando}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <RefreshCw className={`w-4 h-4 mr-1 ${cargando ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline">Actualizar precios</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="container max-w-6xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-5 gap-8">
-          {/* Main content */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Cliente */}
-            <Card className="shadow-soft">
-              <CardHeader>
-                <CardTitle className="font-display text-2xl flex items-center gap-2">
-                  <User className="w-5 h-5 text-gold" />
-                  Datos del Cliente
-                </CardTitle>
-                <CardDescription>Información de contacto para la cotización</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ClienteForm cliente={cliente} onChange={setCliente} />
-              </CardContent>
-            </Card>
+      {seccionActiva === 'home' ? (
+        <div>
+          <HeroSection />
+          <MetricsSection />
+          <ProductsShowcase />
+          <FeaturesSection />
+          <CTASection />
+        </div>
+      ) : (
+        <div className="container max-w-6xl mx-auto px-4 py-8">
+          {seccionActiva === 'roller' ? (
+            <div className="grid lg:grid-cols-5 gap-8">
+              {/* Main content */}
+              <div className="lg:col-span-3 space-y-6">
+                {/* Cliente */}
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="font-display text-2xl flex items-center gap-2">
+                      <User className="w-5 h-5 text-gold" />
+                      Datos del Cliente
+                    </CardTitle>
+                    <CardDescription>Informacion de contacto para la cotizacion</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ClienteForm cliente={cliente} onChange={setCliente} />
+                  </CardContent>
+                </Card>
 
-            {/* Porcentaje Extra */}
-            <Card className="shadow-soft">
-              <CardHeader className="pb-3">
-                <CardTitle className="font-display text-2xl flex items-center gap-2">
-                  <Percent className="w-5 h-5 text-gold" />
-                  Porcentaje Extra
-                </CardTitle>
-                <CardDescription>Ajuste adicional al precio de cada cortina</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-medium">Porcentaje:</Label>
-                    <span className="text-2xl font-bold text-primary">{porcentajeExtra}%</span>
-                  </div>
-                  <Slider
-                    value={[porcentajeExtra]}
-                    onValueChange={(value) => setPorcentajeExtra(value[0])}
-                    max={200}
-                    min={0}
-                    step={10}
-                    className="w-full"
+                {/* Porcentaje Extra */}
+                <Card className="shadow-soft">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="font-display text-2xl flex items-center gap-2">
+                      <Percent className="w-5 h-5 text-gold" />
+                      Porcentaje Extra
+                    </CardTitle>
+                    <CardDescription>Ajuste adicional al precio de cada cortina</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">Porcentaje:</Label>
+                        <span className="text-2xl font-bold text-primary">{porcentajeExtra}%</span>
+                      </div>
+                      <Slider
+                        value={[porcentajeExtra]}
+                        onValueChange={(value) => setPorcentajeExtra(value[0])}
+                        max={200}
+                        min={0}
+                        step={10}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>0%</span>
+                        <span>100%</span>
+                        <span>200%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Cortinas */}
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="font-display text-2xl flex items-center gap-2">
+                      <Home className="w-5 h-5 text-gold" />
+                      Cortinas
+                    </CardTitle>
+                    <CardDescription>Configura cada cortina del pedido</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <CortinaTabs
+                      cortinas={cortinas}
+                      activa={cortinaActiva}
+                      onSelect={setCortinaActiva}
+                      onAgregar={agregarCortina}
+                      onEliminar={eliminarCortina}
+                    />
+
+                    <CortinaEditor
+                      cortina={cortinas[cortinaActiva]}
+                      precios={precios}
+                      onUpdate={(campo, valor) => actualizarCortina(cortinaActiva, campo, valor)}
+                      subtotal={calcularTotalCortina(cortinas[cortinaActiva])}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Sidebar - Resumen */}
+              <div className="lg:col-span-2">
+                <div className="sticky top-24">
+                  <ResumenCotizacion
+                    cliente={cliente}
+                    cortinas={cortinas}
+                    precios={precios}
+                    calcularTotal={calcularTotalCortina}
+                    totalGeneral={calcularTotalGeneral()}
+                    validar={validarCotizacion}
                   />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>0%</span>
-                    <span>100%</span>
-                    <span>200%</span>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Cortinas */}
+              </div>
+            </div>
+          ) : (
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="font-display text-2xl flex items-center gap-2">
                   <Home className="w-5 h-5 text-gold" />
-                  Cortinas
+                  {seccionActiva === 'verticales' ? 'Cortinas Verticales' : 'Toldos'}
                 </CardTitle>
-                <CardDescription>Configura cada cortina del pedido</CardDescription>
+                <CardDescription>Seccion en construccion</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <CortinaTabs
-                  cortinas={cortinas}
-                  activa={cortinaActiva}
-                  onSelect={setCortinaActiva}
-                  onAgregar={agregarCortina}
-                  onEliminar={eliminarCortina}
-                />
-                
-                <CortinaEditor
-                  cortina={cortinas[cortinaActiva]}
-                  precios={precios}
-                  onUpdate={(campo, valor) => actualizarCortina(cortinaActiva, campo, valor)}
-                  subtotal={calcularTotalCortina(cortinas[cortinaActiva])}
-                />
+              <CardContent>
+                <div className="rounded-xl border border-dashed border-border p-8 text-center text-muted-foreground">
+                  Estamos preparando esta seccion. Muy pronto disponible.
+                </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* Sidebar - Resumen */}
-          <div className="lg:col-span-2">
-            <div className="sticky top-24">
-              <ResumenCotizacion
-                cliente={cliente}
-                cortinas={cortinas}
-                precios={precios}
-                calcularTotal={calcularTotalCortina}
-                totalGeneral={calcularTotalGeneral()}
-                validar={validarCotizacion}
-              />
-            </div>
-          </div>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Footer */}
-      <footer className="mt-16 py-8 border-t border-border bg-muted/30">
-        <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>📞 {precios.contacto.telefono} • 📧 {precios.contacto.email}</p>
-          <p className="mt-1">© {new Date().getFullYear()} {precios.contacto.nombreEmpresa} - Calidad en tus ambientes</p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 };

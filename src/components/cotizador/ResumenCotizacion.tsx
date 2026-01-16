@@ -45,35 +45,35 @@ export const ResumenCotizacion = ({
 
   const generarTexto = () => {
     const { contacto } = precios;
-    let texto = `COTIZACION ${contacto.nombreEmpresa}\n`;
+    let texto = `[COTIZACION] ${contacto.nombreEmpresa}\n`;
     texto += `------------------------------\n\n`;
-    texto += `Cliente: ${cliente.nombre}\n`;
-    if (cliente.telefono) texto += `Telefono: ${cliente.telefono}\n`;
-    if (cliente.email) texto += `Email: ${cliente.email}\n`;
-    if (cliente.direccion) texto += `Direccion: ${cliente.direccion}\n`;
-    texto += `Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
+    texto += `[*] Cliente: ${cliente.nombre}\n`;
+    if (cliente.telefono) texto += `[*] Telefono: ${cliente.telefono}\n`;
+    if (cliente.email) texto += `[*] Email: ${cliente.email}\n`;
+    if (cliente.direccion) texto += `[*] Direccion: ${cliente.direccion}\n`;
+    texto += `[*] Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
 
     cortinas.forEach((cortina, index) => {
       const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
       const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
 
-      texto += `CORTINA ${index + 1}\n`;
-      texto += `Medidas: ${cortina.ancho}cm x ${cortina.alto}cm\n`;
-      texto += `Tela: ${tela?.nombre || '-'}\n`;
-      texto += `Gramaje: ${cortina.gramTelaSeleccionado || '-'}\n`;
-      texto += `Apertura: ${cortina.aperturaSeleccionada || '-'}\n`;
-      texto += `Color: ${cortina.colorSeleccionado || '-'}\n`;
-      texto += `Sistema: ${sistema?.nombre || '-'}\n`;
-      texto += `Zocalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
-      texto += `Peso cadena: ${cortina.conPeso ? 'Si' : 'No'}\n`;
-      texto += `Caja: ${cortina.caja ? 'Si' : 'No'}\n`;
+      texto += `[CORTINA ${index + 1}]\n`;
+      texto += `[*] Medidas: ${cortina.ancho}cm x ${cortina.alto}cm\n`;
+      texto += `[*] Tela: ${tela?.nombre || '-'}\n`;
+      texto += `[*] Gramaje: ${cortina.gramTelaSeleccionado || '-'}\n`;
+      texto += `[*] Apertura: ${cortina.aperturaSeleccionada || '-'}\n`;
+      texto += `[*] Color: ${cortina.colorSeleccionado || '-'}\n`;
+      texto += `[*] Sistema: ${sistema?.nombre || '-'}\n`;
+      texto += `[*] Zocalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
+      texto += `[*] Peso cadena: ${cortina.conPeso ? 'Si' : 'No'}\n`;
+      texto += `[*] Caja: ${cortina.caja ? 'Si' : 'No'}\n`;
       if (cortina.ladoMando) {
-        texto += `Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
+        texto += `[*] Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
       }
       if (cortina.caidaTela) {
-        texto += `Caida: ${cortina.caidaTela === 'detras' ? 'Por detras' : 'Por delante'}\n`;
+        texto += `[*] Caida: ${cortina.caidaTela === 'detras' ? 'Por detras' : 'Por delante'}\n`;
       }
-      texto += `Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
+      texto += `[*] Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
     });
 
     texto += `------------------------------\n`;

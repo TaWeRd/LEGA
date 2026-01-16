@@ -1,0 +1,28 @@
+opcionales
+teléfono
+email
+porcentaje extra
+por lo menos una cortina
+máximo de ancho 300 centímetros
+máximo de alto 450 centímetros
+mínimo de ambos 30 cm 
+
+tela ver tema precios*
+que no se muestre nada los precios de cualquier cosa*
+
+
+en lado de mando esta repetido el "color" de la tela , se repite el print
+
+-------------------------------------------
+después de la presentación haya un login *
+la cotización no tiene que decir lega ( la del pdf de impresión , si no el logo de su Google mail y el nombre de usuario .
+
+-------------------------------------------
+
+
+un menu con 3 botones que diga :
+cortinas roller / verticales / toldos
+
+cuando se entre a verticales y toldos , una pagina que diga en construcción .
+
+------------------------------------
