@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePrecios } from '@/hooks/usePrecios';
 import { useCotizador } from '@/hooks/useCotizador';
+import { crearCortinaNueva } from '@/types/cortina';
 import { ClienteForm } from '@/components/cotizador/ClienteForm';
 import { CortinaEditor } from '@/components/cotizador/CortinaEditor';
 import { CortinaTabs } from '@/components/cotizador/CortinaTabs';
@@ -28,6 +29,7 @@ const Index = () => {
     agregarCortina,
     eliminarCortina,
     actualizarCortina,
+    reemplazarCortina,
     calcularTotalCortina,
     calcularTotalGeneral,
     validarCotizacion,
@@ -37,6 +39,61 @@ const Index = () => {
 
   const [mostrarSplash, setMostrarSplash] = useState(true);
   const [seccionActiva, setSeccionActiva] = useState<'home' | 'roller' | 'verticales' | 'toldos'>('home');
+
+  const generarCotizacionDummy = () => {
+    if (!precios.telas.length || !precios.sistemas.length) return;
+
+    const randomFrom = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+    const randomBetween = (min: number, max: number, step = 10) => {
+      const range = Math.floor((max - min) / step) + 1;
+      return min + step * Math.floor(Math.random() * range);
+    };
+
+    if (!cliente.nombre.trim()) {
+      const nombres = ['Milton', 'Carla', 'Sofia', 'Nahuel', 'Bruno', 'Lucia', 'Diego'];
+      const apellidos = ['Quinteros', 'Perez', 'Gimenez', 'Gonzalez', 'Rodriguez', 'Lopez'];
+      const calles = ['Belgrano', 'San Martin', 'Mitre', 'Rivadavia', 'Sarmiento'];
+
+      const nombre = `${randomFrom(nombres)} ${randomFrom(apellidos)}`;
+      const direccion = `${randomFrom(calles)} ${randomBetween(100, 2500, 50)}`;
+      const telefono = `11${randomBetween(20000000, 99999999, 1)}`;
+      const email = `${nombre.toLowerCase().replace(' ', '.')}@mail.com`;
+
+      setCliente({
+        nombre,
+        email,
+        telefono,
+        direccion
+      });
+    }
+
+    cortinas.forEach((cortina, index) => {
+      const tela = randomFrom(precios.telas);
+      const sistema = randomFrom(precios.sistemas);
+      const color = tela.colores.length ? randomFrom(tela.colores) : '';
+      const gramaje = tela.gramTela?.length ? randomFrom(tela.gramTela) : '';
+      const apertura = tela.apertura?.length ? randomFrom(tela.apertura) : '';
+      const tipoTela = tela.tela || '';
+
+      const nueva = {
+        ...crearCortinaNueva(cortina.id),
+        ancho: String(randomBetween(100, 300)),
+        alto: String(randomBetween(100, 450)),
+        telaSeleccionada: tela.id,
+        sistemaSeleccionado: sistema.id,
+        colorSeleccionado: color,
+        gramTelaSeleccionado: gramaje,
+        aperturaSeleccionada: apertura,
+        zocaloForrado: Math.random() > 0.5,
+        conPeso: Math.random() > 0.5,
+        caja: Math.random() > 0.5,
+        ladoMando: Math.random() > 0.5 ? 'derecho' : 'izquierdo',
+        caidaTela: Math.random() > 0.5 ? 'detras' : 'delante'
+      };
+
+      reemplazarCortina(index, nueva);
+    });
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setMostrarSplash(false), 4800);
@@ -139,6 +196,11 @@ const Index = () => {
                 <RefreshCw className={`w-4 h-4 mr-1 ${cargando ? 'animate-spin' : ''}`} />
                 <span className="hidden sm:inline">Actualizar precios</span>
               </Button>
+              {seccionActiva === 'roller' && (
+                <Button variant="outline" size="sm" onClick={generarCotizacionDummy}>
+                  Datos demo
+                </Button>
+              )}
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ export interface Tela {
   apertura?: string[];
   gramTela?: string[];
   colores: string[];
+  tela: string;
 }
 
 export interface Sistema {
@@ -42,7 +43,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 14950,
       apertura: ['5%'],
       gramTela: ['420G'],
-      colores: ['Blanco', 'Blanco/Beige', 'Beige', 'Blanco/Gris', 'Gris', 'Gris/Negro', 'Negro'] 
+      colores: ['Blanco', 'Blanco/Beige', 'Beige', 'Blanco/Gris', 'Gris', 'Gris/Negro', 'Negro'],
+      tela:'PVC Poliester' 
     },
     { 
       id: 'screen5_2005', 
@@ -50,7 +52,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 14105,
       apertura: ['5%'],
       gramTela: ['385G'],
-      colores: ['Blanco', 'Blanco/Beige', 'Blanco/Gris', 'Negro'] 
+      colores: ['Blanco', 'Blanco/Beige', 'Blanco/Gris', 'Negro'],
+      tela:'PVC Poliester'  
     },
     { 
       id: 'mesh10', 
@@ -58,7 +61,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 8000,
       apertura: ['10%'],
       gramTela: ['350G'],
-      colores: ['Blanco', 'Beige', 'Gris'] 
+      colores: ['Blanco', 'Beige', 'Gris'],
+      tela:'PVC'  
     },
     { 
       id: 'blackout_premium', 
@@ -66,7 +70,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 14105,
       apertura: ['100% Opacidad'],
       gramTela: ['520G'], 
-      colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris Topo', 'Negro'] 
+      colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris Topo', 'Negro'],
+      tela:'PVC Fibra de vidrio' 
     },
     { 
       id: 'blackout_eco', 
@@ -74,7 +79,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 10400, 
       apertura: ['100% Opacidad'],
       gramTela: ['440G'],
-      colores: ['Blanco', 'Natural', 'Gris'] 
+      colores: ['Blanco', 'Natural', 'Gris'],
+      tela:'PVC Poliester' 
     },
     { 
       id: 'blackout_economico', 
@@ -82,7 +88,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 8000, 
       apertura: ['100% Opacidad'],
       gramTela: ['405G'],
-      colores: ['Blanco', 'Natural', 'Gris'] 
+      colores: ['Blanco', 'Natural', 'Gris'],
+      tela:'PVC Poliester' 
     },
     { 
       id: 'screen5_99225', 
@@ -90,7 +97,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 14105, 
       apertura: ['Translucida'],
       gramTela: ['320G'],
-      colores: ['Arena'] 
+      colores: ['Arena'],
+      tela:'Poliester lino'  
     },
     { 
       id: 'lagoa', 
@@ -98,7 +106,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 13000, 
       apertura: ['Translucida'],
       gramTela: ['320G'],
-      colores: ['Blanco'] 
+      colores: ['Blanco'],
+      tela:'Poliester algodon'  
     },
     { 
       id: 'berlin', 
@@ -106,7 +115,8 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 13000, 
       apertura: ['Translucida'],
       gramTela: ['320G'],
-      colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris oscuro', 'Negro'] 
+      colores: ['Blanco', 'Natural', 'Beige', 'Gris', 'Gris oscuro', 'Negro'],
+      tela:'Poliester' 
     },
     { 
       id: 'dali', 
@@ -114,18 +124,19 @@ export const PRECIOS_LOCALES: Precios = {
       precio: 13000, 
       apertura: ['Translucida'],
       gramTela: ['320G'],
-      colores: ['Blanco', 'Natural'] 
+      colores: ['Blanco', 'Natural'],
+      tela:'PVC Poliester' 
     }
   ],
   sistemas: [
-    { id: 'sistema32_blanco_plastico', nombre: 'Sistema 32mm cadena plástica blanca', precio: 14300 },
-    { id: 'sistema32_metalica', nombre: 'Sistema 32mm cadena metálica', precio: 17500 },
-    { id: 'sistema32_negro_plastico', nombre: 'Sistema 32mm cadena plástica negra', precio: 14300 },
-    { id: 'sistema38_blanco_plastico', nombre: 'Sistema 38mm cadena plástica blanca', precio: 17500 },
-    { id: 'sistema38_metalica', nombre: 'Sistema 38mm cadena metálica', precio: 19000 },
-    { id: 'sistema38_negro_plastico', nombre: 'Sistema 38mm cadena plástica negra', precio: 17500 },
-    { id: 'sistema50_blanco_plastico', nombre: 'Sistema 50mm cadena plástica blanca', precio: 31000 },
-    { id: 'sistema50_metalica', nombre: 'Sistema 50mm cadena metálica', precio: 35000 }
+    { id: 'sistema32_blanco_plastico', nombre: ' 32mm cadena plástica blanca', precio: 14300 },
+    { id: 'sistema32_metalica', nombre: ' 32mm cadena metálica', precio: 17500 },
+    { id: 'sistema32_negro_plastico', nombre: ' 32mm cadena plástica negra', precio: 14300 },
+    { id: 'sistema38_blanco_plastico', nombre: ' 38mm cadena plástica blanca', precio: 17500 },
+    { id: 'sistema38_metalica', nombre: ' 38mm cadena metálica', precio: 19000 },
+    { id: 'sistema38_negro_plastico', nombre: ' 38mm cadena plástica negra', precio: 17500 },
+    { id: 'sistema50_blanco_plastico', nombre: ' 50mm cadena plástica blanca', precio: 31000 },
+    { id: 'sistema50_metalica', nombre: ' 50mm cadena metálica', precio: 35000 }
   ],
   adicionales: {
     zocaloForrado: 7000,

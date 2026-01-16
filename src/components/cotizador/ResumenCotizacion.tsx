@@ -24,6 +24,26 @@ export const ResumenCotizacion = ({
   totalGeneral,
   validar
 }: ResumenCotizacionProps) => {
+  const EMOJI = {
+    documento: String.fromCodePoint(0x1F4C4),
+    archivo: String.fromCodePoint(0x1F5C2, 0xFE0F),
+    cliente: String.fromCodePoint(0x1F464),
+    telefono: String.fromCodePoint(0x1F4DE),
+    email: String.fromCodePoint(0x1F4E7),
+    direccion: String.fromCodePoint(0x1F4CD),
+    fecha: String.fromCodePoint(0x1F4C5),
+    cortina: String.fromCodePoint(0x1F3E0),
+    medidas: String.fromCodePoint(0x1F4CF),
+    tela: String.fromCodePoint(0x1F9F5),
+    detalle: String.fromCodePoint(0x1F4CB),
+    sistema: String.fromCodePoint(0x2699, 0xFE0F),
+    caja: String.fromCodePoint(0x1F4E6),
+    caida: String.fromCodePoint(0x2B07, 0xFE0F),
+    subtotal: String.fromCodePoint(0x1F9FE),
+    total: String.fromCodePoint(0x1F4B5),
+    empresa: String.fromCodePoint(0x1F3E2),
+    correoEmpresa: String.fromCodePoint(0x1F4E9)
+  };
   const [modalOpen, setModalOpen] = useState(false);
   const totalCampos = 2 + cortinas.length * 7;
   const completados =
@@ -45,42 +65,44 @@ export const ResumenCotizacion = ({
 
   const generarTexto = () => {
     const { contacto } = precios;
-    let texto = `[COTIZACION] ${contacto.nombreEmpresa}\n`;
+    let texto = `${EMOJI.documento} Cotizacion / Documento\n`;
+    texto += `${EMOJI.archivo} ${contacto.nombreEmpresa}\n`;
     texto += `------------------------------\n\n`;
-    texto += `[*] Cliente: ${cliente.nombre}\n`;
-    if (cliente.telefono) texto += `[*] Telefono: ${cliente.telefono}\n`;
-    if (cliente.email) texto += `[*] Email: ${cliente.email}\n`;
-    if (cliente.direccion) texto += `[*] Direccion: ${cliente.direccion}\n`;
-    texto += `[*] Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
+    texto += `${EMOJI.cliente} Cliente / Contacto\n`;
+    texto += `${EMOJI.cliente} Cliente: ${cliente.nombre}\n`;
+    if (cliente.telefono) texto += `${EMOJI.telefono} Telefono: ${cliente.telefono}\n`;
+    if (cliente.email) texto += `${EMOJI.email} Email: ${cliente.email}\n`;
+    if (cliente.direccion) texto += `${EMOJI.direccion} Direccion: ${cliente.direccion}\n`;
+    texto += `${EMOJI.fecha} Fecha: ${new Date().toLocaleDateString('es-AR')}\n\n`;
 
     cortinas.forEach((cortina, index) => {
       const tela = precios.telas.find(t => t.id === cortina.telaSeleccionada);
       const sistema = precios.sistemas.find(s => s.id === cortina.sistemaSeleccionado);
 
-      texto += `[CORTINA ${index + 1}]\n`;
-      texto += `[*] Medidas: ${cortina.ancho}cm x ${cortina.alto}cm\n`;
-      texto += `[*] Tela: ${tela?.nombre || '-'}\n`;
-      texto += `[*] Gramaje: ${cortina.gramTelaSeleccionado || '-'}\n`;
-      texto += `[*] Apertura: ${cortina.aperturaSeleccionada || '-'}\n`;
-      texto += `[*] Color: ${cortina.colorSeleccionado || '-'}\n`;
-      texto += `[*] Sistema: ${sistema?.nombre || '-'}\n`;
-      texto += `[*] Zocalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
-      texto += `[*] Peso cadena: ${cortina.conPeso ? 'Si' : 'No'}\n`;
-      texto += `[*] Caja: ${cortina.caja ? 'Si' : 'No'}\n`;
+      texto += `${EMOJI.cortina} Cortina ${index + 1}\n`;
+      texto += `${EMOJI.medidas} Medidas: ${cortina.ancho}cm x ${cortina.alto}cm\n`;
+      texto += `${EMOJI.tela} Tela: ${tela?.nombre || '-'}\n`;
+      texto += `${EMOJI.detalle} Gramaje: ${cortina.gramTelaSeleccionado || '-'}\n`;
+      texto += `${EMOJI.detalle} Apertura: ${cortina.aperturaSeleccionada || '-'}\n`;
+      texto += `${EMOJI.detalle} Color: ${cortina.colorSeleccionado || '-'}\n`;
+      texto += `${EMOJI.sistema} Sistema: ${sistema?.nombre || '-'}\n`;
+      texto += `${EMOJI.detalle} Zocalo: ${cortina.zocaloForrado ? 'A la vista' : 'Forrado'}\n`;
+      texto += `${EMOJI.detalle} Peso cadena: ${cortina.conPeso ? 'Si' : 'No'}\n`;
+      texto += `${EMOJI.caja} Caja: ${cortina.caja ? 'Si' : 'No'}\n`;
       if (cortina.ladoMando) {
-        texto += `[*] Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
+        texto += `${EMOJI.sistema} Mando: ${cortina.ladoMando === 'derecho' ? 'Derecho' : 'Izquierdo'}\n`;
       }
       if (cortina.caidaTela) {
-        texto += `[*] Caida: ${cortina.caidaTela === 'detras' ? 'Por detras' : 'Por delante'}\n`;
+        texto += `${EMOJI.caida} Caida: ${cortina.caidaTela === 'detras' ? 'Por detras' : 'Por delante'}\n`;
       }
-      texto += `[*] Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
+      texto += `${EMOJI.subtotal} Subtotal: $${calcularTotal(cortina).toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
     });
 
     texto += `------------------------------\n`;
-    texto += `TOTAL: $${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
-    texto += `${contacto.telefono}\n`;
-    texto += `${contacto.email}\n`;
-    texto += `${contacto.nombreEmpresa}\n`;
+    texto += `${EMOJI.total} Total: $${totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2 })}\n\n`;
+    texto += `${EMOJI.empresa} Empresa: ${contacto.nombreEmpresa}\n`;
+    texto += `${EMOJI.telefono} ${contacto.telefono}\n`;
+    texto += `${EMOJI.correoEmpresa} ${contacto.email}\n`;
 
     return texto;
   };

@@ -37,6 +37,14 @@ export const useCotizador = (precios: Precios) => {
     });
   }, []);
 
+  const reemplazarCortina = useCallback((index: number, data: Cortina) => {
+    setCortinas(prev => {
+      const nuevas = [...prev];
+      nuevas[index] = data;
+      return nuevas;
+    });
+  }, []);
+
   const calcularTotalCortina = useCallback((cortina: Cortina): number => {
     if (!cortina.ancho || !cortina.alto || !cortina.telaSeleccionada || !cortina.sistemaSeleccionado) {
       return 0;
@@ -125,6 +133,7 @@ export const useCotizador = (precios: Precios) => {
     agregarCortina,
     eliminarCortina,
     actualizarCortina,
+    reemplazarCortina,
     calcularTotalCortina,
     calcularTotalGeneral,
     validarCotizacion,

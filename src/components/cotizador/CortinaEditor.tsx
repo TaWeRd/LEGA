@@ -146,7 +146,7 @@ export const CortinaEditor = ({
         {/* Info */}
         {telaSeleccionada && (
           <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Tela:</span> {telaSeleccionada.nombre || '-'} -{' '}
+            <span className="font-medium text-foreground">Tela:</span> {telaSeleccionada.tela.toString() || '-'} -{' '}
             <span className="font-medium text-foreground">Gramaje:</span> {gramajeActual || '-'} -{' '}
             <span className="font-medium text-foreground">Apertura:</span> {aperturaActual || '-'}
           </p>
