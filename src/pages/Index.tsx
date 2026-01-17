@@ -17,6 +17,10 @@ import ProductsShowcase from '@/components/hero/ProductsShowcase';
 import FeaturesSection from '@/components/hero/FeaturesSection';
 import CTASection from '@/components/hero/CTASection';
 import Footer from '@/components/hero/Footer';
+import { useBandasVerticales } from '@/hooks/useBandasVerticales';
+import { BandaVerticalTabs } from '@/components/verticales/BandaVerticalTabs';
+import { BandaVerticalEditor } from '@/components/verticales/BandaVerticalEditor';
+import { ResumenBandasVerticales } from '@/components/verticales/ResumenBandasVerticales';
 
 const Index = () => {
   const { precios, cargando, recargar } = usePrecios();
@@ -36,6 +40,19 @@ const Index = () => {
     porcentajeExtra,
     setPorcentajeExtra
   } = useCotizador(precios);
+  const {
+    cliente: clienteVertical,
+    setCliente: setClienteVertical,
+    bandas,
+    bandaActiva,
+    setBandaActiva,
+    agregarBanda,
+    eliminarBanda,
+    actualizarBanda,
+    totalGeneral,
+    totalGeneralConIva,
+    validarBandas
+  } = useBandasVerticales();
 
   const [mostrarSplash, setMostrarSplash] = useState(true);
   const [seccionActiva, setSeccionActiva] = useState<'home' | 'roller' | 'verticales' | 'toldos'>('home');
@@ -304,6 +321,59 @@ const Index = () => {
                     calcularTotal={calcularTotalCortina}
                     totalGeneral={calcularTotalGeneral()}
                     validar={validarCotizacion}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : seccionActiva === 'verticales' ? (
+            <div className="grid lg:grid-cols-5 gap-8">
+              <div className="lg:col-span-3 space-y-6">
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="font-display text-2xl flex items-center gap-2">
+                      <User className="w-5 h-5 text-gold" />
+                      Datos del Cliente
+                    </CardTitle>
+                    <CardDescription>Informacion de contacto para la cotizacion</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ClienteForm cliente={clienteVertical} onChange={setClienteVertical} />
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-soft">
+                  <CardHeader>
+                    <CardTitle className="font-display text-2xl flex items-center gap-2">
+                      <Home className="w-5 h-5 text-gold" />
+                      Bandas Verticales
+                    </CardTitle>
+                    <CardDescription>Configura cada banda del pedido</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <BandaVerticalTabs
+                      bandas={bandas}
+                      activa={bandaActiva}
+                      onSelect={setBandaActiva}
+                      onAgregar={agregarBanda}
+                      onEliminar={eliminarBanda}
+                    />
+
+                    <BandaVerticalEditor
+                      banda={bandas[bandaActiva]}
+                      onUpdate={(campo, valor) => actualizarBanda(bandaActiva, campo, valor)}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="lg:col-span-2">
+                <div className="sticky top-24">
+                  <ResumenBandasVerticales
+                    cliente={clienteVertical}
+                    bandas={bandas}
+                    totalGeneral={totalGeneral}
+                    totalGeneralConIva={totalGeneralConIva}
+                    validar={validarBandas}
                   />
                 </div>
               </div>
