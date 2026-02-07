@@ -34,6 +34,7 @@ const Index = () => {
     eliminarCortina,
     actualizarCortina,
     reemplazarCortina,
+    duplicarCortina,
     calcularTotalCortina,
     calcularTotalGeneral,
     validarCotizacion,
@@ -271,7 +272,7 @@ const Index = () => {
                         onValueChange={(value) => setPorcentajeExtra(value[0])}
                         max={200}
                         min={0}
-                        step={10}
+                        step={5}
                         className="w-full"
                       />
                       <div className="flex justify-between text-xs text-muted-foreground">
@@ -298,6 +299,7 @@ const Index = () => {
                       activa={cortinaActiva}
                       onSelect={setCortinaActiva}
                       onAgregar={agregarCortina}
+                      onDuplicar={duplicarCortina}
                       onEliminar={eliminarCortina}
                     />
 

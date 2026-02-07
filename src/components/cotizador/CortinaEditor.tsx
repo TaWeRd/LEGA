@@ -28,11 +28,11 @@ export const CortinaEditor = ({
   const telaSeleccionada = precios.telas.find(t => t.id === cortina.telaSeleccionada);
   const anchoValue = Number(cortina.ancho);
   const altoValue = Number(cortina.alto);
-  const minMedida = 100;
+  const minCobro = 100;
   const maxAncho = 300;
   const maxAlto = 450;
-  const anchoInvalido = Number.isFinite(anchoValue) && (anchoValue < minMedida || anchoValue > maxAncho);
-  const altoInvalido = Number.isFinite(altoValue) && (altoValue < minMedida || altoValue > maxAlto);
+  const anchoInvalido = Number.isFinite(anchoValue) && anchoValue > maxAncho;
+  const altoInvalido = Number.isFinite(altoValue) && altoValue > maxAlto;
   const gramajeActual = gramTelaSeleccionado ?? cortina.gramTelaSeleccionado;
   const aperturaActual = aperturaSeleccionada ?? cortina.aperturaSeleccionada;
 
@@ -54,13 +54,6 @@ export const CortinaEditor = ({
       });
       return;
     }
-    if (valor < minMedida) {
-      toast({
-        title: 'Medida invalida',
-        description: `La medida minima es ${minMedida} cm.`,
-        variant: 'destructive'
-      });
-    }
   };
 
   return (
@@ -77,7 +70,7 @@ export const CortinaEditor = ({
             <Input
               id="ancho"
               type="number"
-              min={minMedida}
+              min={1}
               max={maxAncho}
               placeholder="Ej: 150"
               value={cortina.ancho}
@@ -94,7 +87,7 @@ export const CortinaEditor = ({
             <Input
               id="alto"
               type="number"
-              min={minMedida}
+              min={1}
               max={maxAlto}
               placeholder="Ej: 200"
               value={cortina.alto}
@@ -108,7 +101,7 @@ export const CortinaEditor = ({
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          Minimo 100cm. Maximo ancho {maxAncho}cm. Maximo alto {maxAlto}cm.
+          Minimo {minCobro}cm, pero puede ser menor y se cobra como {minCobro}cm. Ancho maximo {maxAncho}cm (si la tela lo permite). Alto maximo {maxAlto}cm.
         </p>
       </div>
 

@@ -45,6 +45,17 @@ export const useCotizador = (precios: Precios) => {
     });
   }, []);
 
+  const duplicarCortina = useCallback((index: number) => {
+    setCortinas(prev => {
+      const base = prev[index];
+      if (!base) return prev;
+      const nueva = { ...base, id: prev.length + 1 };
+      const nuevas = [...prev, nueva];
+      setCortinaActiva(nuevas.length - 1);
+      return nuevas;
+    });
+  }, [setCortinaActiva]);
+
   const calcularTotalCortina = useCallback((cortina: Cortina): number => {
     if (!cortina.ancho || !cortina.alto || !cortina.telaSeleccionada || !cortina.sistemaSeleccionado) {
       return 0;
@@ -76,7 +87,6 @@ export const useCotizador = (precios: Precios) => {
   }, [cortinas, calcularTotalCortina]);
 
   const validarCotizacion = useCallback((): { valido: boolean; mensaje?: string } => {
-    const minMedida = 100;
     const maxAncho = 300;
     const maxAlto = 450;
 
@@ -97,9 +107,6 @@ export const useCotizador = (precios: Precios) => {
       const alto = Number(c.alto);
       if (!Number.isFinite(ancho) || !Number.isFinite(alto)) {
         return { valido: false, mensaje: `Medidas invalidas en la cortina ${i + 1}` };
-      }
-      if (ancho < minMedida || alto < minMedida) {
-        return { valido: false, mensaje: `Las medidas minimas son ${minMedida}cm en la cortina ${i + 1}` };
       }
       if (ancho > maxAncho) {
         return { valido: false, mensaje: `El ancho maximo es ${maxAncho}cm en la cortina ${i + 1}` };
@@ -134,6 +141,7 @@ export const useCotizador = (precios: Precios) => {
     eliminarCortina,
     actualizarCortina,
     reemplazarCortina,
+    duplicarCortina,
     calcularTotalCortina,
     calcularTotalGeneral,
     validarCotizacion,

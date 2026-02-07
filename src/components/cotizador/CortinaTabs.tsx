@@ -1,5 +1,5 @@
 import { Cortina } from '@/types/cortina';
-import { Plus, X } from 'lucide-react';
+import { Copy, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface CortinaTabsProps {
@@ -7,6 +7,7 @@ interface CortinaTabsProps {
   activa: number;
   onSelect: (index: number) => void;
   onAgregar: () => void;
+  onDuplicar: (index: number) => void;
   onEliminar: (index: number) => void;
 }
 
@@ -15,6 +16,7 @@ export const CortinaTabs = ({
   activa,
   onSelect,
   onAgregar,
+  onDuplicar,
   onEliminar
 }: CortinaTabsProps) => {
   return (
@@ -54,6 +56,15 @@ export const CortinaTabs = ({
       >
         <Plus className="w-4 h-4" />
         Agregar
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onDuplicar(activa)}
+        className="flex items-center gap-1 border-gold/30 text-gold hover:bg-gold/10 hover:text-gold"
+      >
+        <Copy className="w-4 h-4" />
+        Duplicar
       </Button>
     </div>
   );
